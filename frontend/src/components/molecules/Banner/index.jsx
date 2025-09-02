@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import bannerImg from '../../../assets/banerImg.png'
 import { TypeAnimation } from 'react-type-animation';
 import "../../../pages/shared/Shared.css";
-import { SecondaryBtn } from "../../../components";
+import { SecondaryBtn } from "../..";
 
 const Banner = () => {
   return (
