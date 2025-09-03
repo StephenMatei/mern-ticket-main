@@ -1,107 +1,186 @@
+// path: src/pages/Event.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { TypeAnimation } from 'react-type-animation';
 import { motion } from "framer-motion";
-import "./Event.css";
-import "../../components/atoms/PrimaryBtn/PrimaryBtn.css";
-import "../shared/Shared.css";
-import { BottomLine, Footer } from "../../components";
 import { HiShoppingCart } from "react-icons/hi";
+import { RiFolderInfoFill } from "react-icons/ri";
+import { BottomLine, Footer } from "../../components";
+
+// Temporary mock data (replace with API call later)
+const events = [
+  {
+    id: 1,
+    title: "Raisa Live Concert",
+    artist: "Raisa",
+    date: "June 18, 2023, 19:00 WIB",
+    venue: "GBK Main Stadium",
+    image:
+      "https://res.cloudinary.com/du541igfh/image/upload/v1686241499/Blog%20Portfolio%20Gilbert/Project/mern-ticket/eventImg_nt6div.png",
+    slug: "raisa-live-concert",
+  },
+  {
+    id: 2,
+    title: "Comedy Nights with Trevor",
+    artist: "Trevor Noah",
+    date: "July 10, 2023, 20:00 WIB",
+    venue: "Nairobi Arena",
+    image:
+      "https://images.unsplash.com/photo-1581322336688-d60293b5d7e3?auto=format&fit=crop&w=800&q=80",
+    slug: "comedy-nights-trevor",
+  },
+  {
+    id: 3,
+    title: "Summer Vibes Festival",
+    artist: "Various Artists",
+    date: "August 2, 2023, 14:00 WIB",
+    venue: "Beachfront Park",
+    image:
+      "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=800&q=80",
+    slug: "summer-vibes-festival",
+  },
+  {
+    id: 4,
+    title: "AfroBeats Explosion",
+    artist: "Burna Boy",
+    date: "August 18, 2023, 19:00 WIB",
+    venue: "Kasarani Stadium",
+    image:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+    slug: "afrobeats-explosion",
+  },
+  {
+    id: 5,
+    title: "Rock Legends Night",
+    artist: "Linkin Park",
+    date: "September 10, 2023, 19:00 WIB",
+    venue: "Wembley Arena",
+    image:
+      "https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?auto=format&fit=crop&w=800&q=80",
+    slug: "rock-legends-night",
+  },
+  {
+    id: 6,
+    title: "Jazz & Soul Evening",
+    artist: "Adele",
+    date: "September 22, 2023, 19:00 WIB",
+    venue: "Royal Albert Hall",
+    image:
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
+    slug: "jazz-soul-evening",
+  },
+  {
+    id: 7,
+    title: "Cultural Fusion Fest",
+    artist: "Various Artists",
+    date: "October 5, 2023, 15:00 WIB",
+    venue: "Uhuru Park",
+    image:
+      "https://images.unsplash.com/photo-1521335629791-ce4aec67dd47?auto=format&fit=crop&w=800&q=80",
+    slug: "cultural-fusion-fest",
+  },
+];
 
 const Event = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
+  // Limit events on homepage to 6
+  const displayedEvents = isHomePage ? events.slice(0, 6) : events;
+
   return (
     <>
-      <div className="parent pt-16 my-16">
-        <div className="">
+      <section className="py-24 px-4 md:px-12 bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
           <motion.div
-            className="mb-10"
-            initial={{ y: -200, opacity: 0 }}
-            animate={{
-              y: 0,
-              opacity: 1,
-              transition: { duration: 1, type: "spring" },
-            }}
+            className="mb-12 text-center"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, type: "spring" }}
           >
-            <h3 className="text-neutral text-center">Something Event Myself</h3>
-            <h1 className="text-4xl font-semibold drop-shadow-md text-center text-accent">
-              Event <span className="text-primary">Big</span>
+            <h3 className="text-indigo-500 uppercase tracking-widest text-sm mb-2">
+              Don’t Miss Out
+            </h3>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white">
+              Upcoming{" "}
+              <span className="text-indigo-600 dark:text-indigo-400">Events</span>
             </h1>
             <BottomLine />
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-            <motion.div
-              initial={{ x: -200, opacity: 0 }}
-              animate={{
-                x: 0,
-                opacity: 1,
-                transition: { duration: 1, delay: 1.25 },
-              }}
-            >
-              <img
-                src="https://res.cloudinary.com/du541igfh/image/upload/v1686241499/Blog%20Portfolio%20Gilbert/Project/mern-ticket/eventImg_nt6div.png"
-                alt="Event Raisa Live Concert"
-                className="p-10 w-50 h-50 transform translate-y-[-12%]"
-                title="Event Raisa Live Concert"
-              />
 
-            </motion.div>
-            <motion.div
-              className=""
-              initial={{ x: 200, opacity: 0 }}
-              animate={{
-                x: 0,
-                opacity: 1,
-                transition: { duration: 1, delay: 1.25 },
-              }}
-            >
-              <h1 className="text-4xl font-semibold mb-4 text-center translate-y-[-380%] sm:translate-y-[-0%] sm:text-3xl sm:mb-2 md:text-left">Gilbert Hutapea</h1>
-              <div className="my-8">
-                <TypeAnimation
-                  className="text-2xl text-primary font-bold text-center translate-y-[-500%] sm:translate-y-[-0%]  sm:text-2xl sm:mb-2 md:text-left"
-                  cursor={true}
-                  sequence={[
-                    "Raisa Live Concert",
-                    2000,
-                    "GBK Main Stadium",
-                    2000,
-                    "June 18, 2023, 19:00 WIB",
-                    2000,
-                  ]}
-                  wrapper="div"
-                  repeat={Infinity}
-                />
-              </div>
-              <p className="text-primary font-medium text-center translate-y-[-100%] sm:translate-y-[-0%] sm:mb-2 md:text-left">
-                Raisa event will take place at the Gelora Bung Karno Main Stadium on June 18 2023.
-                Raisa invited a number of collaborators & special guests to participate & be part of this concert.
-              </p>
-              <br />
-              <p className="text-primary font-medium text-center translate-y-[-50%] sm:translate-y-[-0%] sm:mb-2 md:text-left">
-                History in the making for having the most eminent locals in their fields of expertise,
-                from building stunning stage productions to cutting-edge visuals.
-                Not only the first concert by a local solo artist but the most advanced by global standards
-              </p>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4 mt-4 text-center translate-y-[-50%] sm:translate-y-[-0%] sm:mb-2 md:text-left ">
-                <Link to={'/dashboard'}
-                >
-                  <div className="grid justify-center sm:flex sm:justify-start translate-y-[60%] sm:translate-y-[-0%]">
-                    <button className="primary-button">
-                      <span>Buy Ticket</span>
-                      <span>
-                        <HiShoppingCart />
-                      </span>
-                    </button>
+          {/* Event Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedEvents.map((event, i) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15 }}
+                className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden group hover:shadow-2xl transition transform hover:-translate-y-2 duration-500"
+              >
+                {/* Event Image */}
+                <div className="relative">
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                    {event.date.split(",")[0]}
                   </div>
+                </div>
 
-                </Link>
-              </div>
-            </motion.div>
+                {/* Event Content */}
+                <div className="p-6 pb-28">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {event.title}
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    {event.artist}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {event.venue}
+                  </p>
+                </div>
+
+                {/* Action Buttons fixed at bottom */}
+                <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col sm:flex-row gap-3 bg-white dark:bg-gray-800">
+                  <Link
+                    to={`/events/${event.slug}`}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl 
+                    bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold 
+                    transition shadow-md dark:bg-indigo-800 dark:hover:bg-indigo-700 dark:text-white"
+                  >
+                    Buy Ticket <HiShoppingCart className="text-lg" />
+                  </Link>
+
+                  <Link
+                    to={`/events/${event.slug}`}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl 
+                    bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium 
+                    transition shadow-md dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+                  >
+                    View Event <RiFolderInfoFill className="text-lg" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
           </div>
+
+          {/* More Button (only on homepage) */}
+          {isHomePage && events.length > 6 && (
+            <div className="mt-12 text-center">
+              <Link to="/event">
+                <button className="px-8 py-4 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-all shadow-md hover:shadow-xl">
+                  View More Events →
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
+
+      {/* Footer only if not homepage */}
       {!isHomePage && <Footer />}
     </>
   );

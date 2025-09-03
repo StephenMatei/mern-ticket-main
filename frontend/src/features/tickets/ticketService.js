@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const API_URL = '/api/tickets/'
+// Use backend API from .env (fallback to localhost)
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/tickets/`
 
 // Create new ticket
 const createTicket = async (ticketData, token) => {
@@ -11,7 +12,6 @@ const createTicket = async (ticketData, token) => {
   }
 
   const response = await axios.post(API_URL, ticketData, config)
-
   return response.data
 }
 
@@ -24,7 +24,6 @@ const getTickets = async (token) => {
   }
 
   const response = await axios.get(API_URL, config)
-
   return response.data
 }
 
@@ -37,7 +36,6 @@ const getTicket = async (ticketId, token) => {
   }
 
   const response = await axios.get(API_URL + ticketId, config)
-
   return response.data
 }
 
@@ -54,7 +52,6 @@ const closeTicket = async (ticketId, token) => {
     { status: 'closed' },
     config
   )
-
   return response.data
 }
 
@@ -65,4 +62,4 @@ const ticketService = {
   closeTicket,
 }
 
-export default ticketService;
+export default ticketService

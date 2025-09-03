@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { NotFound, Loader, ScrollToTop, Navbar, PrivateRoute } from "./components";
 import Home from './pages/Home'
 import Event from "./pages/Event";
+import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import NewTicket from './pages/NewTicket';
 import Tickets from './pages/Tickets';
 import Ticket from './pages/Ticket';
+
 
 function App() {
 
@@ -24,6 +26,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path="/event" element={<Event />} />
+            <Route path='/about' element={<About />} />
             <Route path='/contact' element={<Contact />} />
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />

@@ -1,192 +1,189 @@
-import React, { useEffect, useRef, useState } from "react";
-import "./Contact.css";
-import "../../components/atoms/PrimaryBtn/PrimaryBtn.css";
-import "../shared/Shared.css";
-import { motion, useAnimation } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { MdSend, MdEmail } from "react-icons/md";
 import {
-  FaUserAlt,
   FaPhoneAlt,
   FaLocationArrow,
   FaLinkedin,
   FaTwitterSquare,
   FaInstagramSquare,
 } from "react-icons/fa";
-import { MdEmail, MdSend } from "react-icons/md";
+import { BottomLine, Footer } from "../../components";
 import emailjs from "@emailjs/browser";
-import Swal from "sweetalert2";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useInView } from "react-intersection-observer";
-import { headingAnimation, contactAnimation } from "../../hooks/useAnimation";
-import { BottomLine, Footer, SecondaryBtn } from "../../components";
+import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 const Contact = () => {
-  const navigate = useNavigate();
   const form = useRef();
-  const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
-  const [viewDiv, setViewDiv] = useState(false);
-  const animation = useAnimation();
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
-  useEffect(() => {
-    if (inView) {
-      setViewDiv(true);
-    } else {
-      setViewDiv(false);
-    }
-  }, [inView, animation]);
+  // Load socials from env
+  const linkedin = import.meta.env.VITE_LINKEDIN_URL || "#";
+  const twitter = import.meta.env.VITE_TWITTER_URL || "#";
+  const instagram = import.meta.env.VITE_INSTAGRAM_URL || "#";
 
   const handleSend = (e) => {
     e.preventDefault();
+    setLoading(true);
+
     emailjs
       .sendForm(
-        "service_6xnj05v",
-        "template_exk29f8",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         form.current,
-        "kLfLk-o6LKj-L9c77"
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
-      .then(
-        (result) => {
-          console.log(result.text);
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Your Message has been sent",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate("/");
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-    e.target.reset();
+      .then(() => {
+        toast.success("Message sent successfully!");
+        e.target.reset();
+      })
+      .catch(() => toast.error("Failed to send. Try again later."))
+      .finally(() => setLoading(false));
   };
 
   return (
     <>
-      <div className="parent py-24 mt-4">
-        <motion.div
-          initial="hidden"
-          animate={viewDiv && "visible"}
-          variants={headingAnimation}
-        >
-          <h3 className="text-neutral text-center">Feel Free To Contact Me</h3>
-          <h1 className="text-4xl font-semibold drop-shadow-md text-center text-accent">
-            Get In <span className="text-primary">Touch</span>
-          </h1>
-          <BottomLine />
-        </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <section className="py-24 px-6 md:px-12 bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
           <motion.div
-            className=""
-            ref={ref}
-            initial="hidden"
-            animate={viewDiv && "visible"}
-            variants={contactAnimation}
+            className="mb-12 text-center"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, type: "spring" }}
           >
-            <h2 className="text-2xl font-medium">Contact Me</h2>
-            <form ref={form} onSubmit={handleSend}>
-              <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-6">
-                <input
-                  className="input-field"
-                  type="text"
-                  name="name"
-                  id="name"
-                  placeholder="Name"
-                  required
-                />
-                <input
-                  className="input-field"
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
-                  required
-                />
-              </div>
-              <input
-                className="input-field"
-                type="text"
-                name="subject"
-                id="subject"
-                placeholder="Subject"
-                required
-              />
-              <textarea
-                className="input-field"
-                name="message"
-                id="message"
-                cols="30"
-                rows="5"
-                placeholder="Message"
-                required
-              ></textarea>
-              <SecondaryBtn
-                type="submit"
-                value="Send Message"
-                className=""
-              >
-                <span>Send</span>
-                <span><MdSend /></span>
-              </SecondaryBtn>
-            </form>
+            <h3 className="text-indigo-500 uppercase tracking-widest text-sm mb-2">
+              Get In Touch
+            </h3>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white">
+              Contact <span className="text-indigo-600 dark:text-indigo-400">Us</span>
+            </h1>
+            <BottomLine />
           </motion.div>
-          <motion.div
-            className=""
-            initial={{ y: 50, opacity: 0 }}
-            animate={viewDiv && "visible"}
-            variants={contactAnimation}
-          >
-            <h2 className="text-2xl font-medium">Contact Info</h2>
-            <div className="flex items-center my-6">
-              <FaUserAlt className="text-2xl mr-8 text-primary cursor-pointer duration-300"></FaUserAlt>
-              <h3 className="font-medium text-primary">TiKons</h3>
-            </div>
-            <div className="flex items-center my-6">
-              <FaPhoneAlt className="text-2xl mr-8 text-primary cursor-pointer duration-300"></FaPhoneAlt>
-              <h3 className="font-medium text-primary">02233</h3>
-            </div>
-            <div className="flex items-center my-6">
-              <MdEmail className="text-3xl mr-8 text-primary cursor-pointer duration-300"></MdEmail>
-              <h3 className="font-medium text-primary">info@tikons.com</h3>
-            </div>
-            <div className="flex items-center my-6">
-              <FaLocationArrow className="text-2xl mr-8 text-primary cursor-pointer duration-300"></FaLocationArrow>
 
-              <h3 className="font-medium text-primary">
-                Karawang, Jawa Barat, Indonesia
-              </h3>
-            </div>
-            <div className="mt-8 flex items-center">
-              <h3 className="text-xl text-primary">Social</h3>
-              <div className="bg-primary w-10 h-[2px] mx-4"></div>
-              <a
-                href="/"
-                target="blank"
-                className="text-3xl text-primary hover:text-accent hover:-translate-y-1.5 shadow-lg mx-1 duration-300"
-              >
-                <FaLinkedin></FaLinkedin>
-              </a>
-              <a
-                href="/"
-                target="blank"
-                className="text-3xl text-primary hover:text-accent hover:-translate-y-1.5 shadow-lg mx-1 duration-300"
-              >
-                <FaTwitterSquare></FaTwitterSquare>
-              </a>
-              <a
-                href="/"
-                target="blank"
-                className="text-3xl text-primary hover:text-accent hover:-translate-y-1.5 shadow-lg mx-1 duration-300"
-              >
-                <FaInstagramSquare></FaInstagramSquare>
-              </a>
-            </div>
-          </motion.div>
+          {/* Contact Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Left: Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white dark:bg-gray-800 shadow-xl rounded-3xl p-10"
+            >
+              <h2 className="text-2xl md:text-3xl font-bold mb-8 text-gray-900 dark:text-white">
+                Send a Message
+              </h2>
+              <form ref={form} onSubmit={handleSend} className="space-y-5">
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Your Name"
+                  className="text-white input-field w-full p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  required
+                />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Your Email"
+                  className="text-white input-field w-full p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  required
+                />
+                <input
+                  name="subject"
+                  type="text"
+                  placeholder="Subject"
+                  className="text-white input-field w-full p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  required
+                />
+                <textarea
+                  name="message"
+                  rows="5"
+                  placeholder="Your Message"
+                  className="text-white input-field w-full p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 transition duration-300 shadow-lg"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                      Sending...
+                    </span>
+                  ) : (
+                    <>
+                      Send <MdSend />
+                    </>
+                  )}
+                </button>
+              </form>
+            </motion.div>
+
+            {/* Right: Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col justify-center space-y-8"
+            >
+              <div className="flex items-center gap-4">
+                <FaPhoneAlt className="text-2xl text-indigo-500" />
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  +254 712 345 678
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <MdEmail className="text-2xl text-indigo-500" />
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  support@tikons.com
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <FaLocationArrow className="text-2xl text-indigo-500" />
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
+                  Nairobi, Kenya
+                </span>
+              </div>
+
+              <div className="flex gap-6 mt-6">
+                <a
+                  href={linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="text-3xl text-indigo-600 hover:scale-110 hover:text-indigo-800 dark:hover:text-indigo-400 transition-transform duration-300"
+                >
+                  <FaLinkedin />
+                </a>
+                <a
+                  href={twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter"
+                  className="text-3xl text-indigo-600 hover:scale-110 hover:text-indigo-800 dark:hover:text-indigo-400 transition-transform duration-300"
+                >
+                  <FaTwitterSquare />
+                </a>
+                <a
+                  href={instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="text-3xl text-indigo-600 hover:scale-110 hover:text-indigo-800 dark:hover:text-indigo-400 transition-transform duration-300"
+                >
+                  <FaInstagramSquare />
+                </a>
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer only if not homepage */}
       {!isHomePage && <Footer />}
     </>
   );

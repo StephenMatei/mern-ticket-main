@@ -1,70 +1,99 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { HiShoppingCart } from "react-icons/hi";
 import { RiFolderInfoFill } from "react-icons/ri";
 import { motion } from "framer-motion";
-import bannerImg from '../../../assets/banerImg.png'
-import { TypeAnimation } from 'react-type-animation';
-import "../../../pages/shared/Shared.css";
+import { TypeAnimation } from "react-type-animation";
 import { SecondaryBtn } from "../..";
 
+// Mock Cloudinary media URLs (replace with API fetch later)
+const slides = [
+  { type: "image", url: "https://res.cloudinary.com/demo/image/upload/v1686241499/event1.jpg" },
+  { type: "image", url: "https://res.cloudinary.com/demo/image/upload/v1686241499/event2.jpg" },
+  { type: "video", url: "https://res.cloudinary.com/demo/video/upload/v1686241499/event3.mp4" },
+];
+
+// Mock dynamic text from Admin (replace with API fetch later)
+const adminContent = {
+  title: "Sammy-Kioko Events",
+  highlights: [
+    "Raisa Live Concert",
+    "GBK Main Stadium",
+    "June 18, 2023, 19:00 WIB",
+  ],
+  description:
+    "Finally here! Sammy-Kioko Events brings you unforgettable live experiences. Get ready for concerts, comedy shows, and more — brought closer to you.",
+};
+
 const Banner = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Slideshow auto change
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // change every 5 sec
+    return () => clearInterval(interval);
+  }, []);
+
+  const slide = slides[currentSlide];
+
   return (
-    <div className="parent min-h-[100vh] flex flex-col-reverse lg:flex-row items-center justify-between">
+    <div className="relative w-full min-h-screen flex items-center justify-center">
+      {/* Background */}
+      {slide.type === "image" ? (
+        <img
+          src={slide.url}
+          alt="Event Slide"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+      ) : (
+        <video
+          src={slide.url}
+          autoPlay
+          loop
+          muted
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+      )}
+
+      {/* Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
+
+      {/* Banner Content */}
       <motion.div
-        initial={{ x: "-100vw" }}
-        animate={{ x: 0 }}
+        className="relative z-10 text-center text-white px-6 md:px-12 max-w-3xl"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="text-4xl font-semibold text-center mb-0 translate-y-[100%] sm:translate-y-[-0%] text-primary md:text-left">TiKons</h1>
-        <div className="my-4 translate-y-[250%] sm:translate-y-[-0%]">
-          <TypeAnimation
-            className="text-2xl text-primary font-bold text-center  sm:text-2xl sm:mb-2 md:text-left"
-            cursor={true}
-            sequence={[
-              "Raisa Live Concert",
-              2000,
-              "GBK Main Stadium",
-              2000,
-              "June 18, 2023, 19:00 WIB",
-              2000,
-            ]}
-            wrapper="div"
-            repeat={Infinity}
-          />
-        </div>
-        <p className="text-primary text-center max-w-xl mb-6 font-medium translate-y-[60%] sm:translate-y-[-0%] md:text-left">
-          Finally here! The first Indonesian women's single stadium concert.
-          June Concert and Northstar Entertainment are delighted to be holding
-          Raisa Live at the Gelora Bung Karno Main Stadium next February.
-        </p>
+        <h1 className="text-5xl md:text-6xl font-bold mb-4">{adminContent.title}</h1>
 
-        <div className="grid justify-center sm:flex  sm:justify-start translate-y-[50%] sm:translate-y-[-0%]">
-          <Link to="/dashboard" className="primary-button">
-            <span>Buy Ticket</span>
-            <span>
-              <HiShoppingCart />
-            </span>
+        <TypeAnimation
+          className="text-2xl md:text-3xl font-bold mb-6"
+          sequence={adminContent.highlights.flatMap((item) => [item, 2000])}
+          wrapper="div"
+          cursor={true}
+          repeat={Infinity}
+        />
+
+        <p className="mb-8 text-lg md:text-xl">{adminContent.description}</p>
+
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold transition shadow-lg"
+          >
+            Buy Ticket <HiShoppingCart />
           </Link>
 
-          <Link to="/event" className="ml-4 py-8 sm:py-0">
-            <SecondaryBtn>
-              <span>Big Event</span>
-              <span>
-                <RiFolderInfoFill />
-              </span>
-            </SecondaryBtn>
+          <Link to="/event">
+            <button
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-black font-medium transition shadow-md"
+            >
+              View Event <RiFolderInfoFill />
+            </button>
           </Link>
-        </div>
-      </motion.div>
-      <motion.div
-        className="w-full md:w-1/2"
-        initial={{ x: "100vw" }}
-        animate={{ x: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="order-1 pt-10 lg:order-3 lg:pt-0 md:pt-0 sm:pt-0">
-          <img src={bannerImg} alt="Banner TiKons"></img>
         </div>
       </motion.div>
     </div>

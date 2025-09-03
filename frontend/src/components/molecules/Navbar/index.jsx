@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../../features/auth/authSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../../features/auth/authSlice";
 import {
   RiMenu3Fill,
   RiContactsBook2Fill,
   RiFolderInfoFill,
+  RiInformationLine,
 } from "react-icons/ri";
 import { GiCrossMark } from "react-icons/gi";
 import { FaHome } from "react-icons/fa";
@@ -14,167 +15,180 @@ import "react-modern-drawer/dist/index.css";
 import "../../../pages/shared/Shared.css";
 
 function Navbar() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const onLogout = () => {
-    dispatch(logout())
-    navigate('/')
-  }
-
-  const [isOpen, setIsOpen] = React.useState(false);
-  const toggleDrawer = () => {
-    setIsOpen((prevState) => !prevState);
+    dispatch(logout());
+    navigate("/");
   };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDrawer = () => setIsOpen((prev) => !prev);
 
   const navLinks = [
     { title: "Home", link: "/", icon: <FaHome /> },
-    { title: "Event", link: "/event", icon: <RiFolderInfoFill /> },
+    { title: "Events", link: "/event", icon: <RiFolderInfoFill /> },
+    { title: "About", link: "/about", icon: <RiInformationLine /> },
     { title: "Contact", link: "/contact", icon: <RiContactsBook2Fill /> },
   ];
-  const activeLink = ({ isActive }) => {
-    return {
-      fontWeight: 500,
-      color: isActive && "#6b7280",
-    };
-  };
 
+  const activeLink = ({ isActive }) => ({
+    fontWeight: isActive ? 600 : 400,
+    color: isActive ? "#4F46E5" : "#1F2937",
+  });
+
+  // Hide navbar on scroll down, show on scroll up
   const [show, setShow] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+
   useEffect(() => {
     const controlNavbar = () => {
       if (typeof window !== "undefined") {
-        if (window.scrollY > lastScrollY) {
-          setShow(true);
-        } else {
-          setShow(false);
-        }
+        setShow(window.scrollY > lastScrollY);
         setLastScrollY(window.scrollY);
       }
     };
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", controlNavbar);
-      return () => {
-        window.removeEventListener("scroll", controlNavbar);
-      };
-    }
+    window.addEventListener("scroll", controlNavbar);
+    return () => window.removeEventListener("scroll", controlNavbar);
   }, [lastScrollY]);
 
   return (
     <div
-      className={`visible ${show && "nav-hidden"} shadow-lg bg-white 
-     z-50`}
+      className={`fixed w-full z-50 shadow-md bg-white transition-transform ${
+        show ? "-translate-y-20" : "translate-y-0"
+      }`}
     >
-      <div className="w-full flex items-center justify-between px-3 md:px-24 py-3">
-        <div>
-          <Link to="/">
-            <h1 className="text-2xl text-primary font-lobster">TiKons</h1>
-          </Link>
-        </div>
-        <div>
-          <ul className="lg:flex items-center hidden">
-            {navLinks.map((navItem) => (
-              <li className="mx-4" key={navItem.title}>
-                <NavLink
-                  to={navItem.link}
-                  style={activeLink}
-                  className="text-primary hover:text-accent duration-300"
-                >
-                  {navItem.title}
-                </NavLink>
-              </li>
-            ))}
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-12 py-3">
+        {/* Logo */}
+        <Link to="/">
+          <h1 className="text-2xl font-lobster text-indigo-600">
+            Sammy-Kioko Events
+          </h1>
+        </Link>
 
-            {user ? (
+        {/* Desktop Menu */}
+        <ul className="hidden lg:flex items-center gap-6">
+          {navLinks.map((navItem) => (
+            <li key={navItem.title}>
+              <NavLink
+                to={navItem.link}
+                style={activeLink}
+                className="px-3 py-2 rounded-md transition-colors duration-300 hover:bg-indigo-100 hover:text-indigo-600"
+              >
+                {navItem.title}
+              </NavLink>
+            </li>
+          ))}
+
+          {!user && (
+            <>
               <li>
-                <button className='primary-button' onClick={onLogout}>
-                  <span>
-                    Logout
-                  </span>
-                </button>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition"
+                >
+                  Sign Up
+                </Link>
               </li>
-            ) : (
-              <>
+              <li>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition"
+                >
+                  Sign In
+                </Link>
+              </li>
+            </>
+          )}
 
-                <li className="text-center m-4">
-                  <Link to='/login'
-                    className="primary-button ">
-                    <span>Login</span>
-                    <span>
+          {user && (
+            <li>
+              <button
+                onClick={onLogout}
+                className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
+              >
+                Logout
+              </button>
+            </li>
+          )}
+        </ul>
 
-                    </span>
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-          <div className="block lg:hidden">
-            <button onClick={toggleDrawer} className=" text-black hover:text-accent">
-              <RiMenu3Fill></RiMenu3Fill>
-            </button>
-            <Drawer
-              open={isOpen}
-              onClose={toggleDrawer}
-              direction="right"
-              className="bla bla bla flex flex-col justify-between pb-4"
-            >
-              <ul className="">
-                <li className="mt-6 mb-10 ml-4">
-                  <GiCrossMark
-                    className="cursor-pointer hover:text-accent text-primary duration-300"
-                    onClick={() => setIsOpen(!isOpen)}
-                  ></GiCrossMark>
-                </li>
+        {/* Mobile Menu */}
+        <div className="lg:hidden">
+          <button
+            onClick={toggleDrawer}
+            className="text-2xl text-indigo-600 hover:text-indigo-800 transition"
+          >
+            <RiMenu3Fill />
+          </button>
+          <Drawer
+            open={isOpen}
+            onClose={toggleDrawer}
+            direction="right"
+            className="p-4 flex flex-col justify-between h-full"
+          >
+            <div>
+              <div className="flex justify-end mb-6">
+                <GiCrossMark
+                  className="text-2xl text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                  onClick={toggleDrawer}
+                />
+              </div>
+              <ul className="flex flex-col gap-6">
                 {navLinks.map((navItem) => (
-                  <li
-                    className="m-4 text-primary"
-                    key={navItem.title}
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
+                  <li key={navItem.title} onClick={toggleDrawer}>
                     <NavLink
                       to={navItem.link}
                       style={activeLink}
-                      className="flex items-center text-primary hover:text-accent duration-300"
+                      className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 transition-colors duration-300"
                     >
-                      <span className="mr-3">{navItem.icon}</span>
-                      <span>{navItem.title}</span>
+                      {navItem.icon} {navItem.title}
                     </NavLink>
                   </li>
                 ))}
-                {user ? (
-                  <li className="text-center m-4">
-                    <button className='primary-button w-full text-center text-white' onClick={onLogout}>
-                      <span>
-                        Logout
-                      </span>
-                    </button>
-                  </li>
-                ) : (
+
+                {!user && (
                   <>
-
-                    <li className="text-center m-4">
-                      <Link to='/login'
-                        className="primary-button w-full text-white">
-                        <span>Login</span>
-                        <span>
-
-                        </span>
+                    <li>
+                      <Link
+                        to="/register"
+                        className="w-full px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition"
+                      >
+                        Sign Up
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="w-full px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition"
+                      >
+                        Sign In
                       </Link>
                     </li>
                   </>
                 )}
+
+                {user && (
+                  <li>
+                    <button
+                      onClick={onLogout}
+                      className="w-full px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                )}
               </ul>
-              <div className="text-center">
-                <p className="text-primary">
-                  &copy; Copyright 2023, TiKons
-                </p>
-              </div>
-            </Drawer>
-          </div>
+            </div>
+            <div className="text-center mt-8 text-gray-500">
+              &copy; {new Date().getFullYear()} Sammy-Kioko Events
+            </div>
+          </Drawer>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 

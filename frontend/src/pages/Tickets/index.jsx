@@ -27,7 +27,7 @@ function Tickets() {
             <input
               type="text"
               placeholder="Type to search.."
-              className="rounded-lg border-[1.5px] border-stroke bg-transparent py-2 pl-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter  left-0 text-primary"
+              className="rounded-lg border-[1.5px] border-stroke bg-transparent py-2 pl-10 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter left-0 text-primary"
             />
             <span className="absolute left-2 py-3 text-xl">
               <BiSearch />
@@ -39,63 +39,52 @@ function Tickets() {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-center">
-                <th className="py-4 px-4 font-medium text-black">
-                  Date
-                </th>
-                <th className="py-4 px-4 font-medium text-black">
-                  Seating
-                </th>
-                <th className="py-4 px-4 font-medium text-black">
-                  Payment
-                </th>
-                <th className="py-4 px-4 font-medium text-black">
-                  Status
-                </th>
-                <th className="py-4 px-4 font-medium text-black">
-                  Actions
-                </th>
+                <th className="py-4 px-4 font-medium text-black">Date</th>
+                <th className="py-4 px-4 font-medium text-black">Seating</th>
+                <th className="py-4 px-4 font-medium text-black">Payment</th>
+                <th className="py-4 px-4 font-medium text-black">Status</th>
+                <th className="py-4 px-4 font-medium text-black">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {tickets.map((ticket) => {
-                return (
-                  <tr className='text-center'
-                    key={ticket._id}>
-                    <td className='border-b border-accent py-5 px-4'>
-                      <p className='text-black '>{new Date(ticket.createdAt).toLocaleString('en-US')}</p>
-                    </td>
-                    <td className='border-b border-accent py-5 px-4'>
-                      <p className='text-black '>{ticket.seating}</p>
-                    </td>
-                    <td className='border-b border-accent py-5 px-4'>
-                      <p className='text-black '>{ticket.payment}</p>
-                    </td>
-                    <td className="border-b rounded-full border-accent">
-                      <p
-                        className={`rounded-full ${ticket.status === "new" ? "bg-green-500" : "bg-red-500"
-                          } h-8 w-50`}
-                      >
-                        <p className="text-black py-1">{ticket.status}</p>
-                      </p>
-                    </td>
-
-
-                    <td className='border-b border-accent py-5 px-4'>
-                      <Link to={`/ticket/${ticket._id}`}
-                        className='flex justify-center'>
-                        <button className='hover:text-black'>
-                          <FaRegEye className="text-primary text-2xl hover:text-accent text-center" />
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
+              {tickets.map((ticket) => (
+                <tr className="text-center" key={ticket._id}>
+                  <td className="border-b border-accent py-5 px-4">
+                    <span className="text-black">
+                      {new Date(ticket.createdAt).toLocaleString('en-US')}
+                    </span>
+                  </td>
+                  <td className="border-b border-accent py-5 px-4">
+                    <span className="text-black">{ticket.seating}</span>
+                  </td>
+                  <td className="border-b border-accent py-5 px-4">
+                    <span className="text-black">{ticket.payment}</span>
+                  </td>
+                  <td className="border-b border-accent py-5 px-4">
+                    <div
+                      className={`inline-block rounded-full px-4 py-1 text-black ${
+                        ticket.status === 'new' ? 'bg-green-500' : 'bg-red-500'
+                      }`}
+                    >
+                      {ticket.status}
+                    </div>
+                  </td>
+                  <td className="border-b border-accent py-5 px-4">
+                    <Link
+                      to={`/ticket/${ticket._id}`}
+                      className="flex justify-center"
+                    >
+                      <button className="hover:text-black">
+                        <FaRegEye className="text-primary text-2xl hover:text-accent text-center" />
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
-
           </table>
         </div>
-      </div >
+      </div>
       <Footer />
     </>
   );

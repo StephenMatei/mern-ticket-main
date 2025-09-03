@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const API_URL = '/api/users/'
+// Use .env API URL (fallback to localhost if not set)
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/users/`
 
 // Register user
 const register = async (userData) => {
@@ -14,7 +15,7 @@ const register = async (userData) => {
 
 // Login user
 const login = async (userData) => {
-  const response = await axios.post(API_URL + 'login', userData)
+  const response = await axios.post(`${API_URL}login`, userData)
 
   if (response.data) {
     localStorage.setItem('user', JSON.stringify(response.data))
@@ -27,8 +28,8 @@ const logout = () => localStorage.removeItem('user')
 
 const authService = {
   register,
-  logout,
   login,
+  logout,
 }
 
-export default authService;
+export default authService
