@@ -1,24 +1,27 @@
-const express = require('express')
-const router = express.Router()
-const {
+// backend/routes/ticketRoutes.js
+import express from "express";
+import {
   getTickets,
   getTicket,
   createTicket,
   deleteTicket,
   updateTicket,
-} = require('../controllers/ticketController')
+} from "../controllers/ticketController.js";
 
-const { protect } = require('../middleware/authMiddleware')
+import { protect } from "../middleware/authMiddleware.js";
+import noteRouter from "./noteRoutes.js";
 
-const noteRouter = require('./noteRoutes')
-router.use('/:ticketId/notes', noteRouter)
+const router = express.Router();
 
-router.route('/').get(protect, getTickets).post(protect, createTicket)
+router.use("/:ticketId/notes", noteRouter);
 
-router
-  .route('/:id')
+router.route("/")
+  .get(protect, getTickets)
+  .post(protect, createTicket);
+
+router.route("/:id")
   .get(protect, getTicket)
   .delete(protect, deleteTicket)
-  .put(protect, updateTicket)
+  .put(protect, updateTicket);
 
-module.exports = router
+export default router;

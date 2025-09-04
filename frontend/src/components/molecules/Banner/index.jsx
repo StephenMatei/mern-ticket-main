@@ -4,7 +4,6 @@ import { HiShoppingCart } from "react-icons/hi";
 import { RiFolderInfoFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
-import { SecondaryBtn } from "../..";
 
 // Mock Cloudinary media URLs (replace with API fetch later)
 const slides = [
@@ -23,16 +22,16 @@ const adminContent = {
   ],
   description:
     "Finally here! Sammy-Kioko Events brings you unforgettable live experiences. Get ready for concerts, comedy shows, and more — brought closer to you.",
+  slug: "raisa-live-concert", // slug for the event
 };
 
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Slideshow auto change
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // change every 5 sec
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -80,14 +79,16 @@ const Banner = () => {
         <p className="mb-8 text-lg md:text-xl">{adminContent.description}</p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
+          {/* Buy Ticket */}
           <Link
-            to="/dashboard"
+            to="/new-ticket"
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold transition shadow-lg"
           >
             Buy Ticket <HiShoppingCart />
           </Link>
 
-          <Link to="/event">
+          {/* View Event */}
+          <Link to={`/event-details/${adminContent.slug}`}>
             <button
               className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-black font-medium transition shadow-md"
             >

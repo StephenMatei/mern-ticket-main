@@ -1,4 +1,3 @@
-// path: src/pages/EventDetail.jsx
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -138,7 +137,7 @@ const EventDetail = () => {
                 </div>
               ))}
             </div>
-            <Link to={`/checkout/${event.slug}`}>
+            <Link to="/new-ticket">
               <button className="mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
                 <span>Buy Ticket</span>
                 <HiShoppingCart />

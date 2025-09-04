@@ -9,7 +9,7 @@ import {
   RiInformationLine,
 } from "react-icons/ri";
 import { GiCrossMark } from "react-icons/gi";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaTachometerAlt } from "react-icons/fa";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import "../../../pages/shared/Shared.css";
@@ -104,14 +104,24 @@ function Navbar() {
           )}
 
           {user && (
-            <li>
-              <button
-                onClick={onLogout}
-                className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
-              >
-                Logout
-              </button>
-            </li>
+            <>
+              <li>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition"
+                >
+                  <FaTachometerAlt /> Dashboard
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={onLogout}
+                  className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
           )}
         </ul>
 
@@ -155,6 +165,7 @@ function Navbar() {
                       <Link
                         to="/register"
                         className="w-full px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition"
+                        onClick={toggleDrawer}
                       >
                         Sign Up
                       </Link>
@@ -163,6 +174,7 @@ function Navbar() {
                       <Link
                         to="/login"
                         className="w-full px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition"
+                        onClick={toggleDrawer}
                       >
                         Sign In
                       </Link>
@@ -171,14 +183,27 @@ function Navbar() {
                 )}
 
                 {user && (
-                  <li>
-                    <button
-                      onClick={onLogout}
-                      className="w-full px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
-                    >
-                      Logout
-                    </button>
-                  </li>
+                  <>
+                    <li onClick={toggleDrawer}>
+                      <Link
+                        to="/dashboard"
+                        className="flex items-center gap-2 w-full px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition"
+                      >
+                        <FaTachometerAlt /> Dashboard
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          onLogout();
+                          toggleDrawer();
+                        }}
+                        className="w-full px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium transition"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </>
                 )}
               </ul>
             </div>

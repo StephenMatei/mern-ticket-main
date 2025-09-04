@@ -1,20 +1,21 @@
-const mongoose = require('mongoose')
+// path: backend/models/noteModel.js
+import mongoose from "mongoose";
 
-const noteSchema = mongoose.Schema(
+const noteSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
     ticket: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Ticket',
+      ref: "Ticket",
     },
     text: {
       type: String,
-      required: [true, 'Please add some text'],
+      required: [true, "Please add some text"],
     },
     isStaff: {
       type: Boolean,
@@ -27,6 +28,8 @@ const noteSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-module.exports = mongoose.model('Note', noteSchema)
+const Note = mongoose.model("Note", noteSchema);
+
+export default Note;

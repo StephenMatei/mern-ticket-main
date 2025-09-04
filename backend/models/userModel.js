@@ -1,19 +1,20 @@
-const mongoose = require('mongoose')
+// path: backend/models/userModel.js
+import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please add a name'],
+      required: [true, "Please add a name"],
     },
     email: {
       type: String,
-      required: [true, 'Please add an email'],
+      required: [true, "Please add an email"],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
+      required: [true, "Please add a password"],
     },
     isAdmin: {
       type: Boolean,
@@ -24,6 +25,8 @@ const userSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-module.exports = mongoose.model('User', userSchema)
+const User = mongoose.model("User", userSchema);
+
+export default User;
